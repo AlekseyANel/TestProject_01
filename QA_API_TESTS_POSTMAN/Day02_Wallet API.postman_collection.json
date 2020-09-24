@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "093f0ab2-e8aa-4db6-bb36-22f4b9131395",
+		"name": "Day02_Wallet API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Req_01_create/wallet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75a983ba-3259-48f4-9352-d585ef42bde2",
+						"exec": [
+							"const responseWallet = pm.response.json();\r",
+							"//проверка наличие нужного проперти-свойства\r",
+							"pm.test(\"check property 'wallet_id'\", function() {\r",
+							"    pm.expect(responseWallet).to.have.property('wallet_id');\r",
+							"});\r",
+							"//назначаем динамичные переменные и выводим в консоль для контроля\r",
+							"pm.environment.set(\"wallet_id\", responseWallet.wallet_id);\r",
+							"pm.environment.set(\"currency\", \"btc\");\r",
+							"console.info(pm.environment.get('wallet_id'), pm.environment.get('currency'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/create/wallet",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"create",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Req_02_payment/address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9089440-6f6d-4634-8d32-2f1920ec3104",
+						"exec": [
+							"console.info(pm.environment.get('wallet_id'));\r",
+							"\r",
+							"//\"wallet_id\": \"BTCviZHKVgKB79mrPVtY57v26nHf6u7XuCRoW766fHwNA1JAnVcGy\""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"wallet_id\": \"{{wallet_id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/create/wallet/payment/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"create",
+						"wallet",
+						"payment",
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Req_03_wallet/state",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c2f6b15-3498-42c9-a0ad-f16785937816",
+						"exec": [
+							"const response1 = pm.response.json();\r",
+							"const resCurrency = response1.currency;\r",
+							"\r",
+							"pm.test(\"Check string of currency BTC\", function () {\r",
+							"    pm.expect(resCurrency).to.include(\"BTC\");\r",
+							"});  \r",
+							"\r",
+							"pm.test(\"Bitok header is 'fucking banks'\", () => {\r",
+							"  pm.expect(pm.response.headers.get('Bitcoin')).to.eql('because fuck the banks');\r",
+							"});\r",
+							"\r",
+							"/*NO---pm.test(\"Date control\", function () {\r",
+							"    pm.expect(resDate).to.be.above('2020-01-01');\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}/wallet/state/{{wallet_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"wallet",
+						"state",
+						"{{wallet_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Req_04_Daily/wallet/statistics",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "59096bfa-3924-4e4c-bd7a-f94f191102e8",
+						"exec": [
+							"const response1 = pm.response.json();\r",
+							"const response2 = response1.next_page;\r",
+							"const responseList = response1.day_list[0];\r",
+							"const responseDate= responseList.date;\r",
+							"console.info(response2, responseDate);\r",
+							"console.info(pm.environment.get('wallet_id'));\r",
+							"\r",
+							"pm.test(\"Check value of next-page\", function () {\r",
+							"    pm.expect(response2).to.equal(false)\r",
+							"});  \r",
+							"\r",
+							"pm.test(\"Body has a Date\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(responseDate);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}/wallet/daily/statistic/{{wallet_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"wallet",
+						"daily",
+						"statistic",
+						"{{wallet_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Req_05_Daily/wallet/statistics",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6ba01319-adc7-4443-bf22-2e99e7b2b1a9",
+						"exec": [
+							"const response1 = pm.response.json();\r",
+							"const response2 = response1.next_page;\r",
+							"const responseList = response1.day_list;\r",
+							"console.info(response2, responseList);\r",
+							"\r",
+							"pm.test(\"Array or not?\", function () {\r",
+							" pm.expect(responseList).to.be.an('array')/*.that.is.empty*/;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response is json format\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check length of array\", function () {\r",
+							"    pm.expect(responseList).to.have.lengthOf.at.most(50)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}/wallet/daily/statistic/{{wallet_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"wallet",
+						"daily",
+						"statistic",
+						"{{wallet_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Req_06_create/walletANDpre_request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb2874bb-d686-4082-9534-84c6bc430c6a",
+						"exec": [
+							"const response2 = pm.response.json();\r",
+							"//наглядно проверяем на всекий случай меняется ли создание кошелька на противоположный?\r",
+							"console.info(response2.wallet_id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a4d54e91-9dd7-44bf-b9f2-5cc90cf986df",
+						"exec": [
+							"//Проверяем и назначаем соответствующий/противоположный коин\r",
+							"if (pm.environment.get('currency') === \"btc\") {\r",
+							"    pm.environment.set('currency', \"eth\");\r",
+							"    //console.info(pm.environment.get('currency'));\r",
+							"\r",
+							"}\r",
+							"else { \r",
+							"    pm.environment.set('currency', \"btc\")\r",
+							"};\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.bitaps.com/{{currency}}/testnet/v1/create/wallet",
+					"protocol": "https",
+					"host": [
+						"api",
+						"bitaps",
+						"com"
+					],
+					"path": [
+						"{{currency}}",
+						"testnet",
+						"v1",
+						"create",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
