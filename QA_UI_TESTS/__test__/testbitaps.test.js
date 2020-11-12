@@ -5,13 +5,13 @@ let browser; let context;
 
 beforeAll(async () => {
     browser = await playwright.chromium.launch({headless:false, slowMo:1000});
-    });
+    }); //Open Bro at beginning
 beforeEach(async () => {context = await browser.newContext();
-    });
+    }); //Create context page before each test
 afterEach(async () => {await context.close();
-    });
+    }); //Close context page after each test
 afterAll(async () => {await browser.close();
-    });
+    }); //Close Bro at the end
 
 describe('UI test',() => {
   let page;
